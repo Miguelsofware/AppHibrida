@@ -1,28 +1,55 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Galeria de Foto 
+      Galería de Fotos
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-grid>
-    <ion-row>
-      <!-- Mostrar fotos -->
-      <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
-        <ion-img 
-          [src]="photo.webviewPath" 
-          (click)="showActionSheet(photo, position)">
-        </ion-img>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-  <!-- Botón flotante para tomar foto -->
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button (click)="addPhotoToGallery()">
-      <ion-icon name="camera"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <!-- 🔹 Mostrar login solo si NO hay usuario -->
+  <div *ngIf="!usuario">
+    <h2>Iniciar Sesión</h2>
+    <ion-input placeholder="Email" [(ngModel)]="email"></ion-input>
+    <ion-input placeholder="Contraseña" [(ngModel)]="password" type="password"></ion-input>
+
+    <ion-button expand="full" (click)="login()">Login</ion-button>
+    <ion-button expand="full" (click)="registrar()">Registrar</ion-button>
+  </div>
+
+  <!-- 🔹 Mostrar galería solo si hay usuario logueado -->
+  <div *ngIf="usuario">
+    <p>Bienvenido: {{ usuario.email }}</p>
+    <ion-button expand="full" color="danger" (click)="logout()">Salir</ion-button>
+
+    <!-- 📸 Galería -->
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+          <ion-img 
+            [src]="photo.webviewPath" 
+            (click)="showActionSheet(photo, position)">
+          </ion-img>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- 🛒 Botones de carrito -->
+    <ion-button expand="full" color="tertiary" (click)="addToCart()">
+      Agregar al carrito 🛒
+    </ion-button>
+
+    <ion-button expand="full" color="primary" routerLink="/carrito">
+      Ver carrito
+    </ion-button>
+
+    <!-- 🎥 Botón flotante para tomar foto -->
+    <ion-fab vertical="bottom" horizontal="end" edge="true" slot="fixed" style="bottom: 90px; right: 16px;">
+      <ion-fab-button (click)="addPhotoToGallery()" color="primary">
+        <ion-icon name="camera"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
 </ion-content>
